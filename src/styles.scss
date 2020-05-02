@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+  list-style: none;
+
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-size: 10px;
+}
+
+input, textarea {
+  transform: perspective(1px);
+}

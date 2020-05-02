@@ -6,12 +6,19 @@
   </div>
 
   <div class="form">
+    <p *ngIf="error.exists"
+       style="margin-top: 10px" class="error">
+      {{ error.message }}
+    </p>
+
 <!--    Login Form-->
     <form *ngIf="currentFormState.login"
-      [formGroup]="loginForm" (ngSubmit)="onSubmitForm()">
+      [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmit()">
       <label>
         <input class="form-input" type="email" name="email"
-               style="margin-top: 30px"
+               [ngStyle]="{
+                  marginTop: error.exists ? '10px' : '30px'
+               }"
                formControlName="email" placeholder="Email" />
       </label>
       <label>
@@ -29,10 +36,12 @@
 
 <!--    Signup Form-->
     <form *ngIf="currentFormState.signup"
-      [formGroup]="signUpForm" (ngSubmit)="onSubmitForm()">
+      [formGroup]="signUpForm" (ngSubmit)="onSignUpFormSubmit()">
       <label>
         <input class="form-input" type="email" name="email"
-               style="margin-top: 30px"
+               [ngStyle]="{
+                  marginTop: error.exists ? '10px' : '30px'
+               }"
                formControlName="email" placeholder="Email" />
       </label>
       <label>
@@ -55,9 +64,10 @@
 
 <!--    Email Verification form-->
     <form *ngIf="currentFormState.verificationForm"
-      [formGroup]="verificationForm" (ngSubmit)="onSubmitForm()">
+      [formGroup]="verificationForm" (ngSubmit)="onVerifyRegistrationFormSubmit()">
       <p class="info" style="margin-top: 10px">
-        Check your email for the verification code and enter it
+        Check your email: <strong>{{ signUpForm.get('email').value }}</strong>
+        for the verification code and enter it
         below. If not in Inbox, check your spam folder.
       </p>
       <label>

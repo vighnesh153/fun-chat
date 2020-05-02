@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "fun-chat"
+    }
+  },
+  "defaultProject": "fun-chat",
+  "cli": {
+    "analytics": false
+  }
 }

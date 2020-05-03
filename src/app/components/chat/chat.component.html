@@ -9,7 +9,7 @@
                   animationType: animationType }"
     ></ngx-loading>
     <div class="message-container"
-         *ngFor="let message of (previousMessages?.reverse() || [])"
+         *ngFor="let message of (previousMessages || []).slice().reverse()"
     >
       <div class="message"
            [ngClass]="{

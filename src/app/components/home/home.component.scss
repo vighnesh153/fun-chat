@@ -1,3 +1,5 @@
+@import "src/theme";
+
 .container {
   position: relative;
   max-width: 500px;
@@ -18,6 +20,7 @@
 
 .users-container {
   height: 90%;
+  position: relative;
 
   border: 1px solid gray;
 
@@ -32,10 +35,17 @@
     justify-content: space-between;
     align-items: center;
 
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(240, 240, 240);
+    }
+
     .chat-info {
 
       .user-identity {
         font-size: 14px;
+        font-weight: bold;
       }
 
       .chat-meta-data {
@@ -44,10 +54,14 @@
         font-style: oblique;
       }
     }
+  }
 
-    .btn-chat {
-      padding: 2px 5px;
-      font-size: 12px;
+  .unread {
+    background-color: $color1;
+    color: $color2;
+
+    &:hover {
+      background-color: lighten($color1, 10);
     }
   }
 }

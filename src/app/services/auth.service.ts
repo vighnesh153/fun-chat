@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import * as openSocket from 'socket.io-client';
+
 import { environment } from '@fc-environments/environment';
 import { LoginResponse } from '@fc-models/LoginResponse';
+import { ChatMessageResponse } from '@fc-models/ChatMessageResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +23,10 @@ export class AuthService {
   public tokenSubject = new BehaviorSubject<string>(null);
   public tokenExpiryDate: Date;
   public email: string;
+
+  public newMessageSubject = new BehaviorSubject<ChatMessageResponse>(null);
+
+  socket: SocketIOClient.Socket;
 
   constructor(private http: HttpClient) {
   }
@@ -39,6 +46,9 @@ export class AuthService {
       this.tokenExpiryDate = expiresAt;
       this.tokenSubject.next(token);
 
+      this.logout(expiresAt.getMilliseconds() - (new Date()).getMilliseconds());
+      this.setupSocket(email, token);
+
       return true;
     }
 
@@ -54,19 +64,41 @@ export class AuthService {
           const token = response.token;
           const expiresAt = new Date(response.expiresAt);
 
+          this.setupSocket(email, token);
+
           localStorage.setItem('token', token);
           localStorage.setItem('email', email);
           localStorage.setItem('expiresAt', expiresAt.toJSON());
+
+          this.logout(expiresAt.getMilliseconds() - (new Date()).getMilliseconds());
         }
       }));
   }
 
-  logout() {
-    this.tokenExpiryDate = null;
-    this.email = null;
-    this.tokenExpiryDate = null;
-    this.clearLoginFromLocalStorage();
-    this.tokenSubject.next(null);
+
+  private setupSocket(email: string, token: string) {
+    this.socket = openSocket(environment.serverUrl);
+    this.socket.emit('join', {email, token});
+
+    this.socket.on('reconnect', () => {
+      this.socket.emit('join', {email, token});
+    });
+
+    this.socket.on('new_message', (newMessage: ChatMessageResponse, fromSocketId: string) => {
+      if (this.socket.id !== fromSocketId) {
+        this.newMessageSubject.next(newMessage);
+      }
+    });
+  }
+
+  logout(atTime: number) {
+    setTimeout(() => {
+      this.tokenExpiryDate = null;
+      this.email = null;
+      this.tokenExpiryDate = null;
+      this.clearLoginFromLocalStorage();
+      this.tokenSubject.next(null);
+    }, atTime);
   }
 
   clearLoginFromLocalStorage() {

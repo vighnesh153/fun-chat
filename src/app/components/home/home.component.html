@@ -1,17 +1,24 @@
 <div class="container">
   <div class="heading">
-    All Users
+    Registered Users
   </div>
   <div class="users-container">
-    <div class="user" *ngFor="let user of allUsers">
+    <div class="user" *ngFor="let user of allUsers" (click)="chatWith(user)"
+         [ngClass]="{
+          unread: user.hasUnreadMessages
+         }"
+    >
       <div class="chat-info">
         <p class="user-identity">
-<!--          <strong>{{ user.email }}</strong>-->
           <span>{{ user.email }}</span>
         </p>
-        <p class="chat-meta-data">New Messages</p>
+        <p *ngIf="user.hasUnreadMessages"
+           class="chat-meta-data">New Messages</p>
       </div>
-      <button class="btn-chat" (click)="chatWith(user)">Chat</button>
     </div>
+    <ngx-loading [show]="isLoadingUsersFromServer"
+                 [config]="{ backdropBorderRadius: '3px',
+                  animationType: animationType }"
+    ></ngx-loading>
   </div>
 </div>

@@ -4,6 +4,10 @@
     <a routerLink="/home">Back</a>
   </div>
   <div class="chat-box">
+    <ngx-loading [show]="isLoadingMessagesFromServer"
+                 [config]="{ backdropBorderRadius: '3px',
+                  animationType: animationType }"
+    ></ngx-loading>
     <div class="message-container"
          *ngFor="let message of (previousMessages?.reverse() || [])"
     >
@@ -17,7 +21,9 @@
     </div>
     <div *ngIf="previousMessages && previousMessages.length > 0"
          style="height: 500px; font-weight: bold">v1.0.1</div>
-    <div class="no-messages" *ngIf="!previousMessages || previousMessages.length === 0">
+    <div class="no-messages"
+         *ngIf="(!previousMessages || previousMessages.length === 0)
+         && isLoadingMessagesFromServer === false">
       Send a message to initiate a conversation with this person.
     </div>
   </div>
@@ -27,7 +33,9 @@
                 id="send-box" cols="30" [(ngModel)]="messageText">
       </textarea>
     <div class="btn-container">
-      <button class="send-btn" (click)="sendMessage()">Send</button>
+      <button class="send-btn" (click)="sendMessage()"
+              [disabled]="isSendingMessage"
+      >Send</button>
     </div>
   </div>
 </div>

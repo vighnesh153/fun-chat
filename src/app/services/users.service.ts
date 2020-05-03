@@ -77,7 +77,8 @@ export class UsersService {
     const token = this.authService.tokenSubject.getValue();
 
     return this.http.post(url,
-      { email: fromEmail, token, toEmail, message },
+      { email: fromEmail, token, toEmail, message,
+        socketId: this.authService.socket.id },
       this.requestOptions);
   }
 }

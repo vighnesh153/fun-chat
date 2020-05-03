@@ -39,6 +39,10 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.router.navigate(['/home']).then();
       }
     });
+
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/home']).then();
+    }
   }
 
   initializeFormsControllers() {

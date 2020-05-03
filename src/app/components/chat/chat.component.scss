@@ -1,0 +1,113 @@
+@import "src/theme";
+
+.container {
+  position: relative;
+  max-width: 500px;
+  height: 90vh;
+  margin: auto;
+}
+
+.heading {
+  height: 10%;
+  padding: 0 10px;
+
+  border: 1px solid gray;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 4vh;
+  font-weight: bold;
+
+  a {
+    font-size: 3vh;
+  }
+}
+
+.chat-box {
+  height: 77%;
+  padding: 10px;
+  position: relative;
+
+  background-color: lightgray;
+  overflow-y: auto;
+  border: 1px solid grey;
+
+  display: flex;
+  flex-direction: column-reverse;
+
+  .no-messages {
+    width: fit-content;
+    padding: 10px;
+    margin: auto;
+
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .message-container {
+    position: relative;
+    width: 100%;
+    margin: 2px 0;
+
+    .message {
+      width: fit-content;
+      max-width: 80%;
+      padding: 5px 10px;
+
+      font-size: 14px;
+      border: 1px solid grey;
+
+      background-color: white;
+      color: $color1;
+      font-weight: bold;
+    }
+
+    .sender {
+      margin-left: auto;
+
+      background-color: $color2;
+      color: $color1;
+      font-weight: bold;
+    }
+  }
+}
+
+.chat-input-bar {
+  position: relative;
+  height: 10%;
+
+  border: 1px solid grey;
+
+  .chat-input-field {
+    height: 100%;
+    width: 80%;
+    position: absolute;
+    left: 0;
+
+    padding: 5px;
+  }
+
+  .btn-container {
+    height: 100%;
+    width: 20%;
+    position: absolute;
+    right: 0;
+
+    .send-btn {
+      height: 100%;
+      width: 100%;
+
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .chat-box {
+    height: 80%;
+  }
+}

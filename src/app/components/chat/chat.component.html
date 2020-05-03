@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="heading">
+    <span>{{ recipient?.email || 'Recipient' }}</span>
+    <a routerLink="/home">Back</a>
+  </div>
+  <div class="chat-box">
+    <div class="message-container"
+         *ngFor="let message of (previousMessages?.reverse() || [])"
+    >
+      <div class="message"
+           [ngClass]="{
+            'sender': message.from !== recipient.email
+         }"
+      >
+        {{ message.body }}
+      </div>
+    </div>
+    <div *ngIf="previousMessages && previousMessages.length > 0"
+         style="height: 500px; font-weight: bold">v1.0.1</div>
+    <div class="no-messages" *ngIf="!previousMessages || previousMessages.length === 0">
+      Send a message to initiate a conversation with this person.
+    </div>
+  </div>
+  <div class="chat-input-bar">
+      <textarea class="chat-input-field" name="send-box"
+                placeholder="Enter your message here."
+                id="send-box" cols="30" [(ngModel)]="messageText">
+      </textarea>
+    <div class="btn-container">
+      <button class="send-btn" (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+<label for="send-box"></label>

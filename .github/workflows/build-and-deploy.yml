@@ -1,0 +1,44 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install SSH Client
+        uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup Node
+        uses: actions/setup-node@master
+        with:
+          node-version: '10.x'
+
+      - name: Install dependencies
+        run: npm install
+      - name: Global install Angular CLI for ease of use
+        run: npm i -g @angular/cli
+
+      - name: Build for production
+        run: ng build --prod --base-href /fun-chat/
+
+      - name: 404 redirect file
+        run: cp dist/fun-chat/index.html dist/fun-chat/404.html
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          SSH: true
+          BRANCH: gh-pages
+          FOLDER: dist/fun-chat  # folder to be deployed
+          CLEAN: true

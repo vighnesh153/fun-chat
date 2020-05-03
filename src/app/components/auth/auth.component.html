@@ -5,6 +5,11 @@
     <span *ngIf="currentFormState.verificationForm">Verify Registration</span>
   </div>
 
+  <ngx-loading [show]="processingRequest"
+               [config]="{ backdropBorderRadius: '3px',
+                  animationType: animationType }"
+  ></ngx-loading>
+
   <div class="form">
     <p *ngIf="error.exists"
        style="margin-top: 10px" class="error">

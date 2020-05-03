@@ -14,8 +14,23 @@
 
 body {
   font-size: 10px;
+
+  &:-webkit-autofill {
+    font-family: 'Poppins', sans-serif;
+  }
 }
 
 input, textarea {
   transform: perspective(1px);
+
+  &:-webkit-autofill::first-line,
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    font-family: 'Poppins', sans-serif !important;
+
+  }
 }
+
+

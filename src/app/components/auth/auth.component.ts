@@ -10,6 +10,8 @@ import { AuthService } from '@fc-services/auth.service';
 import { LoginResponse } from '@fc-models/LoginResponse';
 import { errorMap } from '@fc-environments/error-map';
 
+import { ngxLoadingAnimationTypes } from 'ngx-loading';
+
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
@@ -28,6 +30,10 @@ export class AuthComponent implements OnInit, OnDestroy {
   };
 
   authTokenSubscription: Subscription;
+
+  processingRequest = false;
+
+  animationType = ngxLoadingAnimationTypes.circleSwish;
 
   constructor(private authService: AuthService,
               private router: Router) {
@@ -73,17 +79,20 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onLoginFormSubmit() {
     this.error.exists = false;
+    this.processingRequest = true;
 
     // SetTimeout Hack to turn of error display for a while.
     setTimeout(() => {
       if (this.loginForm.valid === false) {
         this.processError('Both fields are required and should be valid.');
+        this.processingRequest = false;
       } else {
         const email = this.loginForm.get('email').value;
         const password = this.loginForm.get('password').value;
 
         this.authService.login(email, password)
           .subscribe((response: LoginResponse) => {
+            this.processingRequest = false;
             if (response.message) {
               this.processError(response.message);
             } else {
@@ -93,6 +102,7 @@ export class AuthComponent implements OnInit, OnDestroy {
             }
           }, (error: HttpErrorResponse) => {
             this.processError(error.error?.message || error.message);
+            this.processingRequest = false;
           });
       }
     }, 1000);
@@ -100,11 +110,13 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onSignUpFormSubmit() {
     this.error.exists = false;
+    this.processingRequest = true;
 
     // SetTimeout Hack to turn of error display for a while.
     setTimeout(() => {
       if (this.signUpForm.valid === false) {
         this.processError('All fields are required and should be valid.');
+        this.processingRequest = false;
       } else {
         const email = this.signUpForm.get('email').value;
         const password = this.signUpForm.get('password').value;
@@ -117,8 +129,10 @@ export class AuthComponent implements OnInit, OnDestroy {
             } else {
               this.currentFormState.setToVerificationForm();
             }
+            this.processingRequest = false;
           }, (error: HttpErrorResponse) => {
             this.processError(error.error?.message || error.message);
+            this.processingRequest = false;
           });
       }
     }, 1000);
@@ -126,11 +140,13 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onVerifyRegistrationFormSubmit() {
     this.error.exists = false;
+    this.processingRequest = true;
 
     // SetTimeout Hack to turn of error display for a while.
     setTimeout(() => {
       if (this.verificationForm.valid === false) {
         this.processError('Please enter the code.');
+        this.processingRequest = false;
       } else {
         const email = this.signUpForm.get('email').value;
         const token = this.verificationForm.get('verificationToken').value;
@@ -142,8 +158,10 @@ export class AuthComponent implements OnInit, OnDestroy {
             } else {
               this.currentFormState.setToLoginForm();
             }
+            this.processingRequest = false;
           }, (error: HttpErrorResponse) => {
             this.processError(error.error?.message || error.message);
+            this.processingRequest = false;
           });
       }
     }, 1000);

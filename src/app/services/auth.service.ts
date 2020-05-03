@@ -35,7 +35,7 @@ export class AuthService {
     if (this.tokenSubject.getValue() === null) {
       const email = localStorage.getItem('email') || '';
       const token = localStorage.getItem('token') || '';
-      const expiresAt = new Date(localStorage.getItem('token')) || (new Date());
+      const expiresAt = new Date(localStorage.getItem('expiresAt')) || (new Date());
 
       if ((new Date()) >= expiresAt) {
         this.clearLoginFromLocalStorage();
@@ -46,7 +46,8 @@ export class AuthService {
       this.tokenExpiryDate = expiresAt;
       this.tokenSubject.next(token);
 
-      this.logout(expiresAt.getMilliseconds() - (new Date()).getMilliseconds());
+      const logoutAfter = expiresAt.getTime() - Date.now();
+      this.logout(logoutAfter);
       this.setupSocket(email, token);
 
       return true;
@@ -70,7 +71,8 @@ export class AuthService {
           localStorage.setItem('email', email);
           localStorage.setItem('expiresAt', expiresAt.toJSON());
 
-          this.logout(expiresAt.getMilliseconds() - (new Date()).getMilliseconds());
+          const logoutAfter = expiresAt.getTime() - Date.now();
+          this.logout(logoutAfter);
         }
       }));
   }
@@ -93,6 +95,7 @@ export class AuthService {
 
   logout(atTime: number) {
     setTimeout(() => {
+      console.log('Logging out!');
       this.tokenExpiryDate = null;
       this.email = null;
       this.tokenExpiryDate = null;
@@ -104,6 +107,7 @@ export class AuthService {
   clearLoginFromLocalStorage() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiresAt');
+    localStorage.removeItem('email');
   }
 
   signUp(email: string, password: string, confirmPassword: string): Observable<any> {
